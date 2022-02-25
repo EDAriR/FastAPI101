@@ -1,15 +1,29 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from Item import Item
+import PostAPI
+from Routers import api
 
 app = FastAPI()
+
+origins = ["http://localhost:5000"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 @app.get("/")
 async def root():
     return {
         "message": "Hello World",
-        "Swagger": "http://127.0.0.1:8000/docs",
-        "redoc": "http://127.0.0.1:8000/redoc",
+        "Swagger": "http://127.0.0.1:5000/docs",
+        "redoc": "http://127.0.0.1:5000/redoc",
     }
 
 
@@ -18,15 +32,11 @@ async def read_item(item_id):
     return {"item_id": item_id}
 
 
-@app.post("/items/")
-async def create_item(item: Item):
-    item_dict = item.dict()
-    if item.tax:
-        price_with_tax = item.price + item.tax
-        item_dict.update({"price_with_tax": price_with_tax})
-    return item_dict
-
-
 @app.put("/items/{item_id}")
 async def create_item(item_id: int, item: Item):
     return {"item_id": item_id, **item.dict()}
+
+
+# api.router.include_router(PostAPI.router)
+app.include_router(api.router)
+app.include_router(PostAPI.router)
