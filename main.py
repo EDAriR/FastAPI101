@@ -1,11 +1,16 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from mongoengine import connect, disconnect
+
 from Item import Item
 import PostAPI
 from Routers import api
 
 app = FastAPI()
+# connect('test', host='0.0.0.0', port=27107)
+connect('test')
+
 
 origins = ["http://localhost:5000"]
 
