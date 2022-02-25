@@ -71,18 +71,6 @@ class Token(BaseModel):
     token_type: str
 
 
-@router.post("/token", response_model=Token)
-async def login(form_data: OAuth2PasswordRequestForm = Depends()):
-    username = form_data.username
-    password = form_data.password
-    if authenticate(username, password):
-        access_token = create_access_token(
-            data={"sub": username}, expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
-        return {"access_token": access_token, "token_type": "bearer"}
-    else:
-        raise HTTPException(
-            status_code=400, detail="Incorrect username or password")
-
 
 class TokenData(BaseModel):
     username: Optional[str] = None
