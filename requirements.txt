@@ -5,3 +5,5 @@ passlib
 python-jose[cryptography]
 python-multipart
 mongoengine
+
+aiofiles

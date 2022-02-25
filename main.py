@@ -1,5 +1,10 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+
+
+import aiofiles
+from typing import List
 
 from mongoengine import connect, disconnect
 
@@ -10,7 +15,6 @@ from Routers import api
 app = FastAPI()
 # connect('test', host='0.0.0.0', port=27107)
 connect('test')
-
 
 origins = ["http://localhost:5000"]
 
@@ -41,6 +45,11 @@ async def read_item(item_id):
 async def create_item(item_id: int, item: Item):
     return {"item_id": item_id, **item.dict()}
 
+
+@app.get("/download-file")
+def download_file():
+    file_path = "/Users/ed/Downloads/YoutubeDownloas/FFMpeg.py"
+    return FileResponse(path=file_path, filename=file_path)
 
 # api.router.include_router(PostAPI.router)
 app.include_router(api.router)
